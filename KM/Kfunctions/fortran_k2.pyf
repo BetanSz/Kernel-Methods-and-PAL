@@ -1,0 +1,15 @@
+!    -*- f90 -*-
+! Note: the context of this file is case sensitive.
+
+python module fortran_k ! in 
+    interface  ! in :fortran_k
+        subroutine double_bernoulli(x,degre,y) ! in :fortran_k:kernels.f90
+            real(kind=8) intent(in) :: x
+            integer(kind=4) intent(in) :: degre
+            real(kind=8) intent(out) :: y
+        end subroutine double_bernoulli
+    end interface 
+end python module fortran_k
+
+! This file was auto-generated with f2py (version:2).
+! See http://cens.ioc.ee/projects/f2py2e/

@@ -1,0 +1,115 @@
+!    -*- f90 -*-
+! Note: the context of this file is case sensitive.
+
+python module fortran_k ! in 
+    interface  ! in :fortran_k
+        subroutine bernoulli(x,degre,s) ! in :fortran_k:kernels.f90
+            real(kind=8) intent(in) :: x
+            integer(kind=4) intent(in) :: degre
+            real(kind=8) intent(out) :: s
+        end subroutine bernoulli
+        subroutine kernel_spline(x,y,degre,z) ! in :fortran_k:kernels.f90
+            real(kind=8) intent(in) :: x
+            real(kind=8) intent(in) :: y
+            integer(kind=4) intent(in) :: degre
+            real(kind=8) intent(out) :: z
+        end subroutine kernel_spline
+        subroutine kernel_bernoulli(x,y,degre,s) ! in :fortran_k:kernels.f90
+            real(kind=8) intent(in) :: x
+            real(kind=8) intent(in) :: y
+            integer(kind=4) intent(in) :: degre
+            real(kind=8) intent(out) :: s
+        end subroutine kernel_bernoulli
+        subroutine kprod_bernoulli(x,y,k,n,p) ! in :fortran_k:kernels.f90
+            real(kind=8) dimension(n),intent(in) :: x
+            real(kind=8) dimension(n),intent(in),depend(n) :: y
+            integer(kind=4) dimension(n),intent(in),depend(n) :: k
+            integer(kind=4), optional,intent(in),check(len(x)>=n),depend(x) :: n=len(x)
+            real(kind=8) intent(out) :: p
+        end subroutine kprod_bernoulli
+        subroutine kprod_spline(x,y,k,n,p) ! in :fortran_k:kernels.f90
+            real(kind=8) dimension(n),intent(in) :: x
+            real(kind=8) dimension(n),intent(in),depend(n) :: y
+            integer(kind=4) dimension(n),intent(in),depend(n) :: k
+            integer(kind=4), optional,intent(in),check(len(x)>=n),depend(x) :: n=len(x)
+            real(kind=8) intent(out) :: p
+        end subroutine kprod_spline
+        subroutine predict(kernel_flag,nflag,xx,alpha,y,k,n,nxx,ret_val) ! in :fortran_k:kernels.f90
+            character*(*) intent(in) :: kernel_flag
+            integer(kind=4) intent(in) :: nflag
+            real(kind=8) dimension(nxx,n),intent(in) :: xx
+            real(kind=8) dimension(nxx),intent(in),depend(nxx) :: alpha
+            real(kind=8) dimension(n),intent(in),depend(n) :: y
+            integer(kind=4) dimension(n),intent(in),depend(n) :: k
+            integer(kind=4), optional,intent(in),check(shape(xx,1)==n),depend(xx) :: n=shape(xx,1)
+            integer(kind=4), optional,intent(in),check(shape(xx,0)==nxx),depend(xx) :: nxx=shape(xx,0)
+            real(kind=8) intent(out) :: ret_val
+        end subroutine predict
+        subroutine predict2(y,k,n,ret_val) ! in :fortran_k:kernels.f90
+            real(kind=8) dimension(n),intent(in) :: y
+            integer(kind=4) dimension(n),intent(in),depend(n) :: k
+            integer(kind=4), optional,intent(in),check(len(y)>=n),depend(y) :: n=len(y)
+            real(kind=8) intent(out) :: ret_val
+        end subroutine predict2
+        subroutine predict3(alpha,nxx,ret_val) ! in :fortran_k:kernels.f90
+            real(kind=8) dimension(nxx),intent(in) :: alpha
+            integer(kind=4), optional,intent(in),check(len(alpha)>=nxx),depend(alpha) :: nxx=len(alpha)
+            real(kind=8) intent(out) :: ret_val
+        end subroutine predict3
+        subroutine predict4(alpha,y,k,n,nxx,ret_val) ! in :fortran_k:kernels.f90
+            real(kind=8) dimension(nxx),intent(in) :: alpha
+            real(kind=8) dimension(n),intent(in) :: y
+            integer(kind=4) dimension(n),intent(in),depend(n) :: k
+            integer(kind=4), optional,intent(in),check(len(y)>=n),depend(y) :: n=len(y)
+            integer(kind=4), optional,intent(in),check(len(alpha)>=nxx),depend(alpha) :: nxx=len(alpha)
+            real(kind=8) intent(out) :: ret_val
+        end subroutine predict4
+        subroutine predict5(alpha,y,k,n,nxx,ret_val) ! in :fortran_k:kernels.f90
+            real(kind=8) dimension(nxx),intent(in) :: alpha
+            real(kind=8) dimension(n),intent(in) :: y
+            integer dimension(n),intent(in),depend(n) :: k
+            integer, optional,intent(in),check(len(y)>=n),depend(y) :: n=len(y)
+            integer, optional,intent(in),check(len(alpha)>=nxx),depend(alpha) :: nxx=len(alpha)
+            real(kind=8) intent(out) :: ret_val
+        end subroutine predict5
+        subroutine vect_kprod(kernelf,xx,y,k,nxx,ny,nk,p) ! in :fortran_k:kernels.f90
+            character*(*) intent(in) :: kernelf
+            real(kind=8) dimension(nxx,nk),intent(in) :: xx
+            real(kind=8) dimension(ny,nk),intent(in),depend(nk) :: y
+            integer(kind=4) dimension(nk),intent(in),depend(nk) :: k
+            integer(kind=4), optional,intent(in),check(shape(xx,0)==nxx),depend(xx) :: nxx=shape(xx,0)
+            integer(kind=4), optional,intent(in),check(shape(y,0)==ny),depend(y) :: ny=shape(y,0)
+            integer(kind=4), optional,intent(in),check(shape(xx,1)==nk),depend(xx) :: nk=shape(xx,1)
+            real(kind=8) dimension(ny),intent(out),depend(ny) :: p
+        end subroutine vect_kprod
+        subroutine inner_product(w,v,n,ret) ! in :fortran_k:kernels.f90
+            real(kind=8) dimension(n),intent(in) :: w
+            real(kind=8) dimension(n),intent(in),depend(n) :: v
+            integer(kind=4), optional,intent(in),check(len(w)>=n),depend(w) :: n=len(w)
+            real(kind=8) intent(out) :: ret
+        end subroutine inner_product
+        subroutine calcul_k(kernel_flag,nflag,xx,k,n,nxx,ret_k) ! in :fortran_k:kernels.f90
+            character*(*) intent(in) :: kernel_flag
+            integer(kind=4) intent(in) :: nflag
+            real(kind=8) dimension(nxx,n),intent(in) :: xx
+            integer(kind=4) dimension(n),intent(in),depend(n) :: k
+            integer(kind=4), optional,intent(in),check(shape(xx,1)==n),depend(xx) :: n=shape(xx,1)
+            integer(kind=4), optional,intent(in),check(shape(xx,0)==nxx),depend(xx) :: nxx=shape(xx,0)
+            real(kind=8) dimension(nxx,nxx),intent(out),depend(nxx,nxx) :: ret_k
+        end subroutine calcul_k
+        subroutine calcul_k_generic(kernel_flag,nflag,k,xx,yy,n,nxx,nyy,ret_k) ! in :fortran_k:kernels.f90
+            character*(*) intent(in) :: kernel_flag
+            integer(kind=4) intent(in) :: nflag
+            integer(kind=4) dimension(n),intent(in) :: k
+            real(kind=8) dimension(nxx,n),intent(in),depend(n) :: xx
+            real(kind=8) dimension(nyy,n),intent(in),depend(n) :: yy
+            integer(kind=4), optional,intent(in),check(len(k)>=n),depend(k) :: n=len(k)
+            integer(kind=4), optional,intent(in),check(shape(xx,0)==nxx),depend(xx) :: nxx=shape(xx,0)
+            integer(kind=4), optional,intent(in),check(shape(yy,0)==nyy),depend(yy) :: nyy=shape(yy,0)
+            real(kind=8) dimension(nxx,nyy),intent(out),depend(nxx,nyy) :: ret_k
+        end subroutine calcul_k_generic
+    end interface 
+end python module fortran_k
+
+! This file was auto-generated with f2py (version:2).
+! See http://cens.ioc.ee/projects/f2py2e/
